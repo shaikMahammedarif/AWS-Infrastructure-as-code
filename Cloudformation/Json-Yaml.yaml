@@ -1,0 +1,50 @@
+#The is the JSON representation to YAML file
+
+#{
+ #  "course":"AWS Lambda",
+ #  "instructor":"Stephane Maarek",
+ #  "instructor-full":{
+ #     "first-name":"Stephane",
+ #     "last-name":"Maarek",
+ #     "awesomeness-level":9000
+ #  },
+ #  "sections-list":[
+ #     "Introduction",
+ #     "Deploying your first function",
+ #     "Learning AWS Lambda in depth",
+ #     "Real world examples"
+ #  ],
+ #  "lectures":[
+ #     {
+ #        "lecture-id":1,
+ #        "lecture-name":"intro",
+ #        "lecture-length":"5:03"
+ #     },
+ #     {
+ #        "lecture-id":2,
+ #        "lecture-name":"aws lambda",
+ #        "lecture-length":"10:47"
+ #     }
+ #  ]
+# }
+
+course:
+Type: AWS::lamda:Function
+Instruntor: "Stephene Maarek"
+Instructor-full:
+      firstname: "Stephene" 
+      lastname: "Maarek"
+      awesomness-level: 9000
+Section-List: 
+    - "Introduction" 
+    - "Deploying your First function"
+    - "Learning AWS Lambda in deapth"
+    - "Real world use cases  for AWS Lambda  functions"
+Lectures:
+  - lecture-1: "What is AWS Lambda"
+    lecture-name: "intro"
+    lecture-duration: "10"
+  - lecture-2: "Creating your first Lambda function"
+    lecture-name: "create-lambda"
+    lecture-duration: "20"
+    
