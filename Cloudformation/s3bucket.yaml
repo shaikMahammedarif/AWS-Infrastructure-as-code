@@ -1,0 +1,13 @@
+# CloudFormation template to create an S3 bucket using yaml
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  BucketName:
+    Type: String
+    Default: simple-service-bucket-arif-test-123
+    Description: Name of the S3 bucket to be created
+Resources:
+  S3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName:
+        Ref: BucketName
