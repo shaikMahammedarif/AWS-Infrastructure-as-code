@@ -3,11 +3,14 @@ AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
   BucketName:
     Type: String
-    Default: simple-service-bucket-arif-test-123
-    Description: Name of the S3 bucket to be created
+    Default: simple-service-bucket-arif-test-123y3uyryewuyu
+    Description: Created for CloudFormation template to create an S3 bucket
 Resources:
   S3Bucket:
     Type: 'AWS::S3::Bucket'
     Properties:
-      BucketName:
-        Ref: BucketName
+      BucketName: "dev-simple-service-bucket-arif-test-123y3uyryewuyu"
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: BucketOwnerEnforced
+      
