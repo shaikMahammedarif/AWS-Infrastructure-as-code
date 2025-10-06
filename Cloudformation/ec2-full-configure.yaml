@@ -28,7 +28,6 @@ Parameters:
     AllowedValues:
       - t3.micro
       - t3.small
-      - m5.large
     ConstraintDescription: Must be a valid EC2 instance type.
   
   SSHLocation:
