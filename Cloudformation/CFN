@@ -1,0 +1,122 @@
+Cloudformation Building Blocks:
+Template's components :
+AWSTemplate Format Version: identifies the capabilities of the template ("2010-09-09")
+Description: comments about the template
+Transform: specifies one or more Macros that used to process the template
+Metadata
+Resources: your AWS resources declared in the template (MANDATORY)
+Parameters: the dynamic inputs for your template
+Mappings: the static variables for your template
+Outputs: References to what has been created
+Conditionals: List of conditions to perform resource creation
+Rules: validate a parameter(s) during stack creation/update
+Template's helpers (learning as we encounter them):
+References
+Functions
+Cloudformation Parameters:
+A parameter in a CloudFormation template (CFT) is a variable that allows you to input custom values when you create or update a stack like its a way to provide dynamic values to the cloudformation resources  Instead of hard-coding values directly into your template, parameters enable you to build reusable and flexible templates that can be adapted for different environments or use cases. 
+
+We can use reference the The parameter using the !Ref Keyword but it except at AWS Version,Description,Transform,Mappings
+
+Using SSM parameter store we can retrieve the parameter Dynamically 💡 
+Parameters:
+  InstanceType:
+    Description: WebServer EC2 instance type
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /dev/ec2/instanceType #retrive the value of Type of the instance
+    
+  ImageId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+      Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp
+             #the default value retrive the latest image id of amazon linux
+Resources:
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref InstanceType
+      ImageId: !Ref ImageId
+
+Resourses : 
+The Resources section is the core and only required top-level section of a CloudFormation template. It is where you declare the specific AWS infrastructure components that CloudFormation will provision, update, or delete as part of your stack. 
+Key elements of a resource
+Logical ID (or Logical Name)
+A unique, alphanumeric name you assign to a resource within the template.
+Resource type
+A required attribute that identifies the specific AWS resource you want to create.
+It uses the format AWS::ServiceName::ResourceType.
+Resource properties
+A nested collection of key-value pairs that define the configuration details of the resource.
+Optional Attributes in CFN:
+DependsOn
+Very useful to draw a dependency between two resources
+For example, only create an ECS cluster after creating an ASG (Auto Scaling Group)
+DeletionPolicy
+Protect resources from being deleted even if the CloudFormation stack is deleted (ex. an RDS database)
+Update ReplacePolicy:
+Protect resources from being replaced during a CloudFormation update
+Creation Policy: more details in the CFN Init section
+UpdatePolicy: for some specific resources (example: ASG) - discussed later
+Metadata: anything you want
++ examples in the CFN Init section
+DependsOn:
+The DependsOn attribute is used to create an explicit dependency between resources within your template. This ensures that a specific resource is created or updated only after the resource(s) it depends on have been successfully provisioned.
+
+IT Maintains:
+Order of Creation/Update
+Resolving Implicit Dependencies
+Handling Circular Dependencies
+Resources:
+  MyS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my-unique-bucket-name
+
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    DependsOn: MyS3Bucket # This EC2 instance depends on MyS3Bucket
+    Properties:
+      ImageId: ami-0abcdef1234567890
+      InstanceType: t2.micro
+      # ... other properties
+In this example, MyEC2Instance will not be created until MyS3Bucket has been successfully provisioned by CloudFormation.
+Delete Policy:
+In AWS CloudFormation, a DeletionPolicy is a resource attribute that controls what happens to a resource when the stack it belongs to is deleted, or when the resource itself is removed from the template during a stack update
+Retain-This policy keeps the resource and its data, without deleting them, when the stack is deleted. 
+Delete(default behavior)-This policy removes the resource and all its contents when the stack is deleted. 
+Snapshot-This policy creates a snapshot of the resource before deleting it, when the stack is deleted. 
+ RetainExceptOnCreate-This policy acts like Retain for most stack operations but behaves like Delete if the stack operation that initially created the resource is rolled back. 
+
+UpdateReplacePolicy: 
+In AWS CloudFormation, an UpdateReplacePolicy is a resource attribute that controls what happens to the old physical resource when it is replaced by a new one during a stack update. This occurs when you modify a property that requires a replacement of the resource. By default, CloudFormation will delete the old resource.
+Update replace policy options
+Delete (default behavior) - This policy removes the old resource and all its contents when the resource is replaced during an update.
+Retain - This policy keeps the old resource and its data, without deleting them, when the resource is replaced.
+Snapshot - This policy creates a snapshot of the old resource before deleting it, when the resource is replaced. This only applies to resources that support snapshots, such as RDS databases and EC2 volumes. 
+Mappings : 
+The Mappings section provides a way to define static lookup tables, which are essentially key-value pairs. This allows you to specify configuration values based on a condition, such as the AWS region where a stack is deployed or the environment type (e.g., dev, test, or prod). 
+
+A common use case is defining a lookup table for Amazon Machine Images (AMIs), which have different IDs in each AWS region. 
+
+Outputs:
+Outputs are optional declarations of values that provide key details about a stack's resources, making them accessible for other stacks or for manual inspection in the console and via the AWS CLI. They enable cross-stack references by allowing you to export and import values, facilitating resource sharing and reuse across different stacks
+Key Outputs:
+Resource Information: Capture and display important details about your stack's resources, such as an S3 bucket name or a load balancer's website URL. 
+Cross-Stack References: Import output values from one stack into another to establish connections between stacks, which is useful for sharing resources or configurations. 
+Debugging and Verification: View output values to confirm that a stack has been created correctly, for example, by viewing a web application's URL in the CloudFormation console. 
+Programmatic Access: Query the values of outputs programmatically using the AWS Command Line Interface (CLI) or SDKs. 
+Conditions:
+Conditions are logical expressions that you can define in your template to control whether resources are created or how they are configured. They act like "if-then-else" statements in programming and are most often used to create reusable templates that can be deployed across different environments, such as testing and production. 
+!Get - Get the attribute details refer to the documentation
+Example for the conditions 
+Rules
+The Rules section is an optional part of a template that enables custom validation logic for input parameters. Rules allow you to create validation criteria that are more complex than the basic constraints you can set directly on a parameter (like minimum length or allowed patterns)
+(refer document for the better understanding )
+
+
+Meta Data
+The Metadata section is an optional part of a template used to provide additional information about the template or its resources. This data does not affect how the stack is created but can be used for documentation, organization, or by helper scripts to configure resources. 
+Special Metadata Keys
+There are 3 Metadata keys that have special meaning
+AWS::CloudFormation::Interface: Define grouping and ordering of input parameters when they're displayed in the AWS Console
+AWS::CloudFormation::Authentication: Used to specify authentication credentials for files or sources that you specify in AWS::CloudFormation::Init
+AWS::CloudFormation::Init: Define configuration tasks for cfn-init. It's the most powerful usage of the Metadata. See next section for more details
