@@ -40,7 +40,7 @@ Section-List:
     - "Deploying your First function"
     - "Learning AWS Lambda in deapth"
     - "Real world use cases  for AWS Lambda  functions"
-Lectures: 
+Lectures:
   - lecture-1: "What is AWS Lambda"
     lecture-name: "intro"
     lecture-duration: "10"
