@@ -28,10 +28,7 @@ Parameters:
     AllowedValues:
       - t3.micro
       - t3.small
-<<<<<<< HEAD
-      - m5.large
-=======
->>>>>>> 3294c3a352d1382668e8a2c3d0436d9da0b55952
+
     ConstraintDescription: Must be a valid EC2 instance type.
   
   SSHLocation:
@@ -112,8 +109,4 @@ Outputs:
   
   SecurityGroupId:
     Description: The ID of the Security Group.
-<<<<<<< HEAD
     Value: !Ref MyWebServerSecurityGroup
-=======
-    Value: !Ref MyWebServerSecurityGroup
->>>>>>> 3294c3a352d1382668e8a2c3d0436d9da0b55952
