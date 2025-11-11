@@ -141,7 +141,7 @@ Resources:
         
     Properties:
       ImageId:
-        Ref: ImageId
+        Ref : ImageId
       KeyName:
         Ref: KeyName
       InstanceType: t2.micro
